@@ -21,7 +21,7 @@ type Service struct {
 }
 
 func init() {
-	configPath := os.Args[2]
+	configPath := os.Args[1]
 	fmt.Println("configPath: ", configPath)
 	configuration = config.NewConfig(configPath)
 	if configuration == nil {

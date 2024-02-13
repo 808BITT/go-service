@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"sampleservice/lib/app"
 	"sampleservice/lib/config"
@@ -18,7 +17,11 @@ var wg sync.WaitGroup
 var stopFlag = new(bool)
 
 func init() {
-	configuration = config.NewConfig(os.Args[2])
+	if len(os.Args) != 2 {
+		log.Error("Usage: .../main.exe <config path>")
+		return
+	}
+	configuration = config.NewConfig(os.Args[1])
 	if configuration == nil {
 		os.Exit(1)
 	}
@@ -33,17 +36,10 @@ func main() {
 		return
 	}
 	if isWinServ {
-		if len(os.Args) < 2 {
-			log.Error("Usage: main.exe <service name>")
-			return
-		}
-		serviceName := os.Args[1]
+		serviceName := configuration.Install.Name
 		service.Run(serviceName)
 		return
 	}
-
-	fmt.Println("Running as a console application")
-	fmt.Println("Ctrl+C to stop")
 
 	wg.Add(1)
 	go func() {

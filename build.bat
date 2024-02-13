@@ -24,7 +24,7 @@ echo icacls "%install_path%" /grant Everyone:(OI)(CI)F >> bin/install.bat
 echo copy main.exe "%install_path%" >> bin/install.bat
 echo cd .. >> bin/install.bat
 echo copy service.config.json "%install_path%" >> bin/install.bat
-echo sc create "%service_name%" binPath= "\"%install_path%/main.exe\" \"%service_name%\" \"%install_path%/service.config.json\"" start= auto >> bin/install.bat
+echo sc create "%service_name%" binPath= "\"%install_path%/main.exe\" \"%install_path%/service.config.json\"" start= auto >> bin/install.bat
 echo cd bin >> bin/install.bat
 
 REM create the uninstaller
