@@ -3,17 +3,16 @@ package app
 import (
 	"os"
 	"os/signal"
+	"sampleservice/lib/config"
 	"sampleservice/lib/logger"
 	"sync"
 	"syscall"
 	"time"
 )
 
-func Run(stopFlag *bool, wg *sync.WaitGroup) {
-	log := logger.NewLogger("C:/dev/bobbitt/go-service/logs", true)
-
-	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT)
+func Run(config *config.Config, log *logger.Logger, stopFlag *bool, wg *sync.WaitGroup) {
+	stopSignal := make(chan os.Signal, 1)
+	signal.Notify(stopSignal, syscall.SIGTERM, syscall.SIGINT)
 
 	go func() {
 		defer wg.Done()
@@ -29,6 +28,6 @@ func Run(stopFlag *bool, wg *sync.WaitGroup) {
 		}
 	}()
 
-	<-signalChan
+	<-stopSignal
 	*stopFlag = true
 }

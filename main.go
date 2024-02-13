@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"sampleservice/lib/app"
+	"sampleservice/lib/config"
 	"sampleservice/lib/logger"
 	"sampleservice/lib/service"
 	"sync"
@@ -10,13 +12,21 @@ import (
 	"golang.org/x/sys/windows/svc"
 )
 
+var log *logger.Logger
+var configuration *config.Config
 var wg sync.WaitGroup
 var stopFlag = new(bool)
 
-func main() {
-	log := logger.NewLogger("C:/dev/bobbitt/go-service/logs", true)
-	log.Info("Initializing")
+func init() {
+	configuration = config.NewConfig(os.Args[2])
+	if configuration == nil {
+		os.Exit(1)
+	}
 
+	log = logger.NewLogger(configuration.Install.Path+"/logs", true)
+}
+
+func main() {
 	isWinServ, err := svc.IsWindowsService()
 	if err != nil {
 		log.Error("failed to determine if we are running as a windows service: " + err.Error())
@@ -32,9 +42,12 @@ func main() {
 		return
 	}
 
+	fmt.Println("Running as a console application")
+	fmt.Println("Ctrl+C to stop")
+
 	wg.Add(1)
 	go func() {
-		app.Run(stopFlag, &wg)
+		app.Run(configuration, log, stopFlag, &wg)
 	}()
 
 	wg.Wait()

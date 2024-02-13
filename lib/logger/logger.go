@@ -20,6 +20,8 @@ type Logger struct {
 }
 
 func NewLogger(logDir string, debug bool) *Logger {
+	os.MkdirAll(logDir, os.ModePerm)
+
 	today := time.Now()
 	year, month, day := today.Date()
 	index := 0

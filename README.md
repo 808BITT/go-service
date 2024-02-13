@@ -1,4 +1,4 @@
-# Go WinService Template
+# Golang Windows Service Template
 
 This is a template to create a Windows Service in Go.
 
@@ -46,7 +46,7 @@ uninstall
 Starts the service.
 
 ```cmd
-start
+run
 ```
 
 ## Stop
@@ -55,4 +55,12 @@ Stops the service.
 
 ```cmd
 stop
+```
+
+## Restart
+
+Restarts the service.
+
+```cmd
+restart
 ```
